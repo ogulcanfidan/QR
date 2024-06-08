@@ -11,7 +11,7 @@ load_dotenv()
 def init_email_service():
     from_email = os.getenv('EMAIL_USER')
     password = os.getenv('EMAIL_PASS')
-    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server = smtplib.SMTP("smtp.office365.com", 587)  # Outlook SMTP sunucusu
     server.starttls()
     server.login(from_email, password)
     return server, from_email
