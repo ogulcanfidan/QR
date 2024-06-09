@@ -88,16 +88,26 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+        {% if form.errors %}
+            <div class="alert error">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                {% for field, errors in form.errors.items() %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
         <form action="/submit" method="post" id="complaintForm">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="cafe_id" value="4">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="cafe_id" value="{{ cafe_id }}">
             <label for="name">Adınız:</label>
-            <input type="text" id="name" name="name" required>
+            {{ form.name }}
             <label for="phone">Telefon Numaranız:</label>
-            <input type="text" id="phone" name="phone" required>
+            {{ form.phone }}
             <label for="complaint">Şikayetiniz:</label>
-            <textarea id="complaint" name="complaint" rows="4" required></textarea>
-            <input type="submit" value="Gönder">
+            {{ form.complaint }}
+            {{ form.submit }}
         </form>
     </div>
     <script>
