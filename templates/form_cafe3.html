@@ -4,20 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Şikayet Formu - Kafe 3</title>
+    <link rel="stylesheet" href="/static/style.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background: #0056b3;
+        }
+        .alert {
+            padding: 15px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+        }
+        .alert.success {background-color: #4CAF50;} /* Green */
+        .alert.error {background-color: #f44336;} /* Red */
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .closebtn:hover {
+            color: black;
+        }
     </style>
 </head>
 <body>
-    <h1>Şikayet Formu - Kafe 3</h1>
-    <form action="/submit" method="post">
-        <input type="hidden" name="cafe_id" value="3">
-        <label for="name">Adınız:</label>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="phone">Telefon Numaranız:</label>
-        <input type="text" id="phone" name="phone" required><br><br>
-        <label for="complaint">Şikayetiniz:</label><br>
-        <textarea id="complaint" name="complaint" rows="4" cols="50" required></textarea><br><br>
-        <input type="submit" value="Gönder">
-    </form>
+    <div class="form-container">
+        <h1>Şikayet Formu - Kafe 3</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/submit" method="post" id="complaintForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="cafe_id" value="3">
+            <label for="name">Adınız:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="phone">Telefon Numaranız:</label>
+            <input type="text" id="phone" name="phone" required>
+            <label for="complaint">Şikayetiniz:</label>
+            <textarea id="complaint" name="complaint" rows="4" required></textarea>
+            <input type="submit" value="Gönder">
+        </form>
+    </div>
+    <script>
+        document.getElementById('complaintForm').addEventListener('submit', function(event) {
+            // Form submit olduktan sonra inputları temizle
+            setTimeout(function() {
+                document.getElementById('complaintForm').reset();
+            }, 100);
+        });
+    </script>
 </body>
 </html>

@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 from email_service import send_email_template
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
+app.secret_key = 'tektekeryasar'
+csrf = CSRFProtect(app)
 
 # Veritabanı bağlantısı
 def get_db_connection():
@@ -33,23 +36,28 @@ def form():
 # Form verilerini işleme
 @app.route('/submit', methods=['POST'])
 def submit():
-    name = request.form['name']
-    phone = request.form['phone']
-    complaint = request.form['complaint']
+    try:
+        name = request.form['name']
+        phone = request.form['phone']
+        complaint = request.form['complaint']
+        cafe_id = request.form['cafe_id']
+        
+        to_email = cafes.get(cafe_id, "default@example.com")
+
+        conn = get_db_connection()
+        conn.execute('INSERT INTO complaints (name, phone, complaint, cafe_id) VALUES (?, ?, ?, ?)',
+                     (name, phone, complaint, cafe_id))
+        conn.commit()
+        conn.close()
+
+        send_email_template(name, phone, complaint, to_email)
+        
+        flash('Şikayetiniz gönderildi!', 'success')
+    except Exception as e:
+        print(e)
+        flash('Şikayetiniz gönderilemedi!', 'error')
     
-    cafe_id = request.form['cafe_id']
-    
-    to_email = cafes.get(cafe_id, "default@example.com")
-
-    conn = get_db_connection()
-    conn.execute('INSERT INTO complaints (name, phone, complaint, cafe_id) VALUES (?, ?, ?, ?)',
-                 (name, phone, complaint, cafe_id))
-    conn.commit()
-    conn.close()
-
-    send_email_template(name, phone, complaint, to_email)
-
-    return redirect(url_for('index'))
+    return redirect(url_for('form', cafe=cafe_id))
 
 if __name__ == '__main__':
     app.run(debug=True)
