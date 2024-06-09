@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şikayet Formu - Kafe 3</title>
+    <style>
+    </style>
+</head>
+<body>
+    <h1>Şikayet Formu - Kafe 3</h1>
+    <form action="/submit" method="post">
+        <input type="hidden" name="cafe_id" value="3">
+        <label for="name">Adınız:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="phone">Telefon Numaranız:</label>
+        <input type="text" id="phone" name="phone" required><br><br>
+        <label for="complaint">Şikayetiniz:</label><br>
+        <textarea id="complaint" name="complaint" rows="4" cols="50" required></textarea><br><br>
+        <input type="submit" value="Gönder">
+    </form>
+</body>
+</html>
