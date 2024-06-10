@@ -6,7 +6,7 @@ from forms import ComplaintForm
 import re
 
 app = Flask(__name__)
-app.secret_key = 'güvenli_bir_anahtar_burada'  # Güvenli bir anahtar kullanın
+app.secret_key = 'tektekeryasar'
 csrf = CSRFProtect(app)
 
 # Veritabanı bağlantısı
